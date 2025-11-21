@@ -1,0 +1,84 @@
+1️⃣ Open your project in VS Code
+
+Open VS Code.
+
+Go to File → Open Folder and select your Jarvis project folder (the one containing requirements.txt).
+
+
+2️⃣ Open the Terminal in VS Code
+
+Click Terminal → New Terminal from the top menu.
+
+A terminal will open at the bottom, usually starting in your project folder.
+
+
+3️⃣ (Optional) Create & activate a virtual environment
+
+It’s best practice to use a virtual environment so packages don’t conflict:
+
+# Create virtual environment (only if not created)
+
+run this in terminal copy and paste in terminal and hit eter
+
+python -m venv myenv
+
+# Activate virtual environment
+# Windows
+run this in terminal copy and paste in terminal and hit eter
+
+myenv\Scripts\activate
+
+then run this 
+
+python -m pip install --upgrade pip
+
+copy and paste again in terminal of vs code all above 
+# Mac/Linux
+
+4️⃣ Install packages from requirements.txt
+
+Run this command in the VS Code terminal:
+
+copy and paste in terminal
+
+pip install -r requirements.txt
+
+
+This will install all packages listed in the file.
+
+Wait until the installation completes.
+
+5️⃣ Verify packages
+
+Check installed packages with:
+
+copy and paste in terminal
+
+pip list
+
+
+Make sure all required packages like pyttsx3, pygame, eel, speechrecognition, etc., are listed.
+
+6️⃣ Run your project
+
+After installing, run:
+
+copy and paste in terminal
+
+python main.py
+
+
+Your Jarvis project should start running in VS Code.
+
+
+if its run properly then go to termial 
+type 
+pip install pyinstaller 
+hit enter 
+after installing done then run this command 
+
+pyinstaller --noconfirm --onefile --windowed --icon=abhi.ico main.py ^
+--add-data "web;web" ^
+--add-data "modules;modules" ^
+--add-data "config.py;."
+ in terminal copy above paste in terminal hit enter
