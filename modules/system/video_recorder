@@ -1,0 +1,19 @@
+# modules/system/screenshot.py
+import pyautogui
+import datetime
+import asyncio
+import os
+
+async def take_vedio():
+    """
+    Take a screenshot and save it to screenshots folder.
+    """
+    os.makedirs("vedio", exist_ok=True)
+    filename = f"vedio/vedio{datetime.datetime.now().strftime('%Y%m%d_%H%M%S')}.mp4"
+    screenshot = pyautogui.hotkey("win","alt","r")
+    screenshot.save(filename)
+    print(f"[System] Screenshot saved: {filename}")
+    take_vedio==input("enter number:")
+    if take_vedio ==1:
+        take_vedio
+take_vedio()

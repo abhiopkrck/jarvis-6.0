@@ -1,0 +1,158 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>JARVIS Assistant - Web UI</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    /* Settings modal styles */
+    #settings-panel {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.85);
+      display: none; /* hidden by default */
+      justify-content: center;
+      align-items: center;
+      z-index: 999;
+    }
+    #settings-content {
+      background: #2d2d2d;
+      padding: 20px;
+      border-radius: 10px;
+      width: 400px;
+      color: #fff;
+      max-height: 80%;
+      overflow-y: auto;
+    }
+    #settings-content h2 { color: #00ff00; margin-top: 0; }
+    #settings-content input { width: 100%; margin: 5px 0; padding: 8px; border-radius: 5px; border: none; background: #1e1e1e; color: #fff; }
+    #settings-content button { margin-top: 10px; padding: 8px; width: 100%; border-radius: 5px; border: none; background: #ffa500; color: #000; font-weight: bold; cursor: pointer; }
+    #settings-content button:hover { background: #ffb733; }
+    #close-settings { background: #ff4c4c; color: #fff; margin-top: 10px; }
+  </style>
+</head>
+<body>
+    
+  <div id="app">
+    <header>
+      <div class="title">🤖 JARVIS AI ASSISTANT</div>
+      <div class="clock">
+        <div id="date"></div>
+        <div id="time"></div>
+        <div id="day"></div>
+      </div>
+    </header>
+
+    <div class="status" id="status">🔹 System: Ready | Voice: Active | AI: Online</div>
+
+    <main>
+      <section class="chat">
+        <div class="chat-header">💬 CONVERSATION</div>
+        <div id="chat-display" class="chat-display"></div>
+      </section>
+
+      <section class="controls">
+        <label>Enter your command:</label>
+        <input id="input-entry" type="text" placeholder="Type a command and press Enter" />
+        <div class="buttons">
+          <button id="send-btn">Send</button>
+          <button id="stop-speech-btn">⏹️ STOP Speech</button>
+          <button id="open-logs-btn">📝 Open Logs</button>
+          <button id="clear-chat-btn">🗑️ Clear Chat</button>
+          <button id="voice-mode-btn">🎤 Voice Mode</button>
+          <button id="stop-voice-btn">🛑 Stop Voice Mode</button>
+          <button id="image-gen-btn">🖼️ Image Generation</button> 
+          <button id="settings-btn">⚙️ Settings</button>
+          <button id="exit-btn">🔴 Exit Jarvis</button>
+        </div>
+      </section>
+    </main>
+  </div>
+
+
+<div id="image-gen-panel" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);justify-content:center;align-items:center;z-index:1000;">
+  <div style="background:#2d2d2d;padding:20px;border-radius:10px;width:400px;color:#fff;">
+    <h2>🖼️ Image Generation</h2>
+    <input type="text" id="image-prompt" placeholder="Enter prompt for image" style="width:100%;padding:8px;margin:5px 0;border-radius:5px;border:none;background:#1e1e1e;color:#fff;" />
+    <button onclick="generateImage()" style="width:100%;padding:8px;margin-top:10px;background:#ffa500;color:#000;font-weight:bold;border:none;border-radius:5px;cursor:pointer;">Generate Image</button>
+    <div id="image-result" style="margin-top:10px;text-align:center;"></div>
+    <button onclick="document.getElementById('image-gen-panel').style.display='none'" style="margin-top:10px;width:100%;padding:8px;background:#ff4c4c;color:#fff;border:none;border-radius:5px;">Close</button>
+  </div>
+</div>
+  <!-- Settings Panel -->
+  <div id="settings-panel">
+    <div id="settings-content">
+      <h2>⚙️ JARVIS Settings</h2>
+
+      <h3>Apps</h3>
+      <input type="text" id="app-name" placeholder="App name" />
+      <input type="text" id="app-path" placeholder="App path" />
+      <button onclick="addApp()">Add App</button>
+
+      <h3>Websites</h3>
+      <input type="text" id="web-name" placeholder="Site name" />
+      <input type="text" id="web-url" placeholder="Site URL" />
+      <button onclick="addWeb()">Add Website</button>
+
+      <h3>Contacts</h3>
+      <input type="text" id="contact-name" placeholder="Contact name" />
+      <input type="text" id="contact-email" placeholder="Email" />
+      <button onclick="addContact()">Add Contact</button>
+
+      <button id="close-settings">Close Settings</button>
+    </div>
+  </div>
+
+  <script src="/eel.js"></script>
+  <script src="renderer.js"></script>
+  <script>
+    // Show/hide settings panel
+    const settingsPanel = document.getElementById("settings-panel");
+    const settingsBtn = document.getElementById("settings-btn");
+    const closeSettings = document.getElementById("close-settings");
+
+    settingsBtn.addEventListener("click", () => settingsPanel.style.display = "flex");
+    closeSettings.addEventListener("click", () => settingsPanel.style.display = "none");
+
+    // JS functions to call Python
+    async function addApp() {
+      const name = document.getElementById('app-name').value.trim();
+      const path = document.getElementById('app-path').value.trim();
+      if (!name || !path) return alert("Fill both fields");
+      await eel.add_app(name, path)();
+      alert(`App ${name} added!`);
+    }
+
+    async function addWeb() {
+      const name = document.getElementById('web-name').value.trim();
+      const url = document.getElementById('web-url').value.trim();
+      if (!name || !url) return alert("Fill both fields");
+      await eel.add_web(name, url)();
+      alert(`Website ${name} added!`);
+    }
+
+    async function addContact() {
+      const name = document.getElementById('contact-name').value.trim();
+      const email = document.getElementById('contact-email').value.trim();
+      if (!name || !email) return alert("Fill both fields");
+      await eel.add_contact(name, email)();
+      alert(`Contact ${name} added!`);
+    }
+    // This function receives a message from Python
+function js_add_jarvis_message(msg) {
+    const chatDisplay = document.getElementById("chat-display");
+    const message = document.createElement("div");
+    message.className = "jarvis-msg";
+    message.innerText = "Jarvis: " + msg;
+    chatDisplay.appendChild(message);
+    chatDisplay.scrollTop = chatDisplay.scrollHeight;
+}
+
+// Expose to Eel
+eel.expose(js_add_jarvis_message);
+
+  </script>
+</body>
+</html>
