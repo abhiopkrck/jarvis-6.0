@@ -3,5 +3,5 @@ services:
     name: jarvis-ai
     env: python
     buildCommand: pip install -r requirements.txt
-    startCommand: gunicorn main:main
+    startCommand: gunicorn app:app
     plan: free
