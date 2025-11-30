@@ -12,7 +12,6 @@ pynput
 keyboard
 playsound==1.2.2
 SpeechRecognition
-pyaudio
 pyttsx3
 gtts
 googletrans==4.0.0-rc1
